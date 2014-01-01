@@ -1,0 +1,30 @@
+worlds:
+    world:
+        whitelist: world.whitelist.txt
+        restrictInteraction: true
+        restrictEntityInteraction: true
+        enableTeleport: true
+        teleportDestination:
+            world: world_nether
+            x: 0.0
+            y: 0.0
+            z: 0.0
+    world_nether:
+        whitelist: world.whitelist.txt
+        restrictInteraction: true
+        restrictEntityInteraction: true
+        enableTeleport: true
+        teleportDestination:
+            world: world_the_end
+            x: 0.0
+            y: 0.0
+            z: 0.0
+    world_the_end:
+        restrictInteraction: true
+        restrictEntityInteraction: true
+        enableTeleport: true
+        teleportDestination:
+            world: world
+            x: 0.0
+            y: 0.0
+            z: 0.0

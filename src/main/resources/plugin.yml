@@ -1,0 +1,23 @@
+name: ${project.name}
+author: Zw0
+version: ${project.version}
+description: ${project.description}
+
+main: ${project.groupId}.${project.artifactId}.${project.name}
+load: POSTWORLD
+
+commands:
+  cr_add:
+    description: Adds a player to a whitelist
+    usage: |
+           /<command> <worldname> <playername>
+           Example: /<command> world Notch
+  cr_rm:
+    description: Removes a player from a whitelist
+    usage: |
+           /<command> <worldname> <playername>
+           Example: /<command> world Notch
+  cr_reload:
+    description: Reloads all whitelists.
+    usage: |
+           /<command>
