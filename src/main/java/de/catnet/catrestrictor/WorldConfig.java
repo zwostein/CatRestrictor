@@ -34,6 +34,7 @@ public class WorldConfig
 	private boolean restrictEntityInteraction = false;
 	private boolean teleportEnabled = false;
 	private Location teleportDestination = null;
+	private String interventionMessage = null;
 
 	/**
 	 * Sets this world's whitelist.
@@ -93,6 +94,16 @@ public class WorldConfig
 		this.teleportDestination = destination;
 	}
 
+	public String getInterventionMessage()
+	{
+		return interventionMessage;
+	}
+
+	public void setInterventionMessage( String interventionMessage )
+	{
+		this.interventionMessage = interventionMessage;
+	}
+
 	public boolean isInteractionAllowed( Player player )
 	{
 		if( !this.restrictInteraction )
@@ -122,6 +133,8 @@ public class WorldConfig
 			+ ",teleportEnabled=" + this.teleportEnabled;
 		if( this.teleportDestination != null )
 			ret += ",teleportDestination=" + this.teleportDestination.toString();
+		if( this.interventionMessage != null )
+			ret += ",interventionMessage=\"" + this.interventionMessage + "\"";
 		ret += "}";
 		return ret;
 	}

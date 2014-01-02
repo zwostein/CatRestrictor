@@ -36,6 +36,7 @@ public class WorldConfigSerializer
 		String whitelistName = worldSection.getString( "whitelist" );
 		if( whitelistName != null )
 			worldConfig.setWhitelist( new Whitelist( new File( CatRestrictor.getInstance().getDataFolder(), whitelistName ) ) );
+		worldConfig.setInterventionMessage( worldSection.getString( "interventionMessage" ) );
 		worldConfig.setEntityInteractionRestricted( worldSection.getBoolean( "restrictEntityInteraction", false ) );
 		worldConfig.setInteractionRestricted( worldSection.getBoolean( "restrictInteraction", false ) );
 		worldConfig.setTeleportEnabled( worldSection.getBoolean( "enableTeleport", false ) );

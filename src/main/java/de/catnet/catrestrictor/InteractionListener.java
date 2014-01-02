@@ -49,10 +49,6 @@ public class InteractionListener implements Listener
 		player.teleport( destination, PlayerTeleportEvent.TeleportCause.PLUGIN );
 	}
 
-	/**
-	 *
-	 * @param event
-	 */
 	@EventHandler( priority = EventPriority.LOWEST )
 	public void onPlayerInteraction( PlayerInteractEvent event )
 	{
@@ -66,14 +62,13 @@ public class InteractionListener implements Listener
 			return;
 
 		CatRestrictor.getInstance().getLogger().log( Level.INFO, "Cancelling interaction from \"{0}\"", player.getName() );
+		if( worldConfig.getInterventionMessage() != null )
+			player.sendMessage( worldConfig.getInterventionMessage() );
+
 		event.setCancelled( true );
 		this.teleportIfNeeded( player, worldConfig );
 	}
 
-	/**
-	 *
-	 * @param event
-	 */
 	@EventHandler( priority = EventPriority.LOWEST )
 	public void onPlayerInteraction( PlayerInteractEntityEvent event )
 	{
@@ -84,14 +79,13 @@ public class InteractionListener implements Listener
 			return;
 
 		CatRestrictor.getInstance().getLogger().log( Level.INFO, "Cancelling entity interaction from \"{0}\"", player.getName() );
+		if( worldConfig.getInterventionMessage() != null )
+			player.sendMessage( worldConfig.getInterventionMessage() );
+
 		event.setCancelled( true );
 		this.teleportIfNeeded( player, worldConfig );
 	}
 
-	/**
-	 *
-	 * @param event
-	 */
 	@EventHandler( priority = EventPriority.LOWEST )
 	public void onEntityDamageByEntityEvent( EntityDamageByEntityEvent event )
 	{
@@ -106,6 +100,9 @@ public class InteractionListener implements Listener
 			return;
 
 		CatRestrictor.getInstance().getLogger().log( Level.INFO, "Cancelling entity damage by \"{0}\"", player.getName() );
+		if( worldConfig.getInterventionMessage() != null )
+			player.sendMessage( worldConfig.getInterventionMessage() );
+
 		event.setCancelled( true );
 		this.teleportIfNeeded( player, worldConfig );
 	}
