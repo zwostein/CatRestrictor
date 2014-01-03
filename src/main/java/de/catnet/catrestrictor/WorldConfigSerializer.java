@@ -20,6 +20,8 @@ package de.catnet.catrestrictor;
 
 
 import java.io.File;
+import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -37,8 +39,19 @@ public class WorldConfigSerializer
 		if( whitelistName != null )
 			worldConfig.setWhitelist( new Whitelist( new File( CatRestrictor.getInstance().getDataFolder(), whitelistName ) ) );
 		worldConfig.setInterventionMessage( worldSection.getString( "interventionMessage" ) );
-		worldConfig.setEntityInteractionRestricted( worldSection.getBoolean( "restrictEntityInteraction", false ) );
-		worldConfig.setInteractionRestricted( worldSection.getBoolean( "restrictInteraction", false ) );
+
+		List<String> restrictedEventNames = worldSection.getStringList( "restrictedEvents" );
+		for( String s : restrictedEventNames )
+		{
+			try
+			{
+				worldConfig.addEventRestriction( Class.forName( s ) );
+			} catch( ClassNotFoundException ex )
+			{
+				CatRestrictor.getInstance().getLogger().log( Level.WARNING, "Event \"{0}\" could not be found and will be ignored", s );
+			}
+		}
+
 		worldConfig.setTeleportEnabled( worldSection.getBoolean( "enableTeleport", false ) );
 		Location loc = new Location( CatRestrictor.getInstance().getServer().getWorld( worldSection.getName() ), 0.0, 0.0, 0.0 );
 		ConfigurationSection locationSection = worldSection.getConfigurationSection( "teleportDestination" );

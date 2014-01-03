@@ -1,8 +1,10 @@
 worlds:
     world:
         whitelist: world.whitelist.txt
-        restrictInteraction: true
-        restrictEntityInteraction: true
+        interventionMessage: "Nope, bad, bad cat!"
+        restrictedEvents:
+            - org.bukkit.event.block.BlockPlaceEvent
+            - org.bukkit.event.block.BlockBreakEvent
         enableTeleport: true
         teleportDestination:
             world: world_nether
@@ -11,8 +13,10 @@ worlds:
             z: 0.0
     world_nether:
         whitelist: world.whitelist.txt
-        restrictInteraction: true
-        restrictEntityInteraction: true
+        restrictedEvents:
+            - org.bukkit.event.player.PlayerInteractEvent
+            - org.bukkit.event.player.PlayerInteractEntityEvent
+            - org.bukkit.event.entity.EntityDamageByEntityEvent
         enableTeleport: true
         teleportDestination:
             world: world_the_end
@@ -20,8 +24,10 @@ worlds:
             y: 0.0
             z: 0.0
     world_the_end:
-        restrictInteraction: true
-        restrictEntityInteraction: true
+        restrictedEvents:
+            - org.bukkit.event.player.PlayerInteractEvent
+            - org.bukkit.event.player.PlayerInteractEntityEvent
+            - org.bukkit.event.entity.EntityDamageByEntityEvent
         enableTeleport: true
         teleportDestination:
             world: world

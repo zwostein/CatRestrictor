@@ -19,6 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package de.catnet.catrestrictor;
 
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -30,11 +33,10 @@ import org.bukkit.entity.Player;
 public class WorldConfig
 {
 	private Whitelist whitelist = null;
-	private boolean restrictInteraction = false;
-	private boolean restrictEntityInteraction = false;
 	private boolean teleportEnabled = false;
 	private Location teleportDestination = null;
 	private String interventionMessage = null;
+	private final Set<Class> restrictedEvents = new HashSet<Class>();
 
 	/**
 	 * Sets this world's whitelist.
@@ -54,14 +56,28 @@ public class WorldConfig
 		return this.whitelist;
 	}
 
-	public boolean isEntityInteractionRestricted()
+	public boolean addEventRestriction( Class event )
 	{
-		return this.restrictEntityInteraction;
+		return restrictedEvents.add( event );
 	}
 
-	public boolean isInteractionRestricted()
+	public boolean removeEventRestriction( Class event )
 	{
-		return this.restrictInteraction;
+		return restrictedEvents.remove( event );
+	}
+
+	public boolean isEventRestricted( Class event )
+	{
+		return restrictedEvents.contains( event );
+	}
+
+	public boolean isEventRestrictedForPlayer( Class event, Player player )
+	{
+		if( !isEventRestricted( event ) )
+			return false;
+		if( this.whitelist == null )
+			return true;
+		return !whitelist.isListed( player );
 	}
 
 	public boolean isTeleportEnabled()
@@ -72,16 +88,6 @@ public class WorldConfig
 	public Location getTeleportDestination()
 	{
 		return this.teleportDestination;
-	}
-
-	public void setEntityInteractionRestricted( boolean restrict )
-	{
-		this.restrictEntityInteraction = restrict;
-	}
-
-	public void setInteractionRestricted( boolean restrict )
-	{
-		this.restrictInteraction = restrict;
 	}
 
 	public void setTeleportEnabled( boolean enable )
@@ -104,37 +110,30 @@ public class WorldConfig
 		this.interventionMessage = interventionMessage;
 	}
 
-	public boolean isInteractionAllowed( Player player )
-	{
-		if( !this.restrictInteraction )
-			return true;
-		if( this.whitelist == null )
-			return false;
-		return this.whitelist.isListed( player );
-	}
-
-	public boolean isEntityInteractionAllowed( Player player )
-	{
-		if( !this.restrictEntityInteraction )
-			return true;
-		if( this.whitelist == null )
-			return false;
-		return this.whitelist.isListed( player );
-	}
-
 	@Override
 	public String toString()
 	{
 		String ret = "WorldConfig{";
+
+		ret += "restrictedEvents=\"";
+		for( Class c: this.restrictedEvents )
+		{
+			ret += c.getSimpleName() + ",";
+		}
+		ret = ret.substring( 0, ret.length()-1 );
+		ret += "\"";
+
 		if( this.whitelist != null )
-			ret += "whitelist=\"" + this.whitelist.getFile().getPath() + "\",";
-		ret += "restrictInteraction=" + this.restrictInteraction
-			+ ",restrictEntityInteraction=" + this.restrictEntityInteraction
-			+ ",teleportEnabled=" + this.teleportEnabled;
+			ret += ",whitelist=\"" + this.whitelist.getFile().getPath() + "\",";
+
+		ret += ",teleportEnabled=" + this.teleportEnabled;
 		if( this.teleportDestination != null )
 			ret += ",teleportDestination=" + this.teleportDestination.toString();
+
+
 		if( this.interventionMessage != null )
 			ret += ",interventionMessage=\"" + this.interventionMessage + "\"";
+
 		ret += "}";
 		return ret;
 	}

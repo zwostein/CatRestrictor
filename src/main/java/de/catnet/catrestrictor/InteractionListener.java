@@ -24,13 +24,13 @@ import java.util.logging.Level;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.block.*;
+import org.bukkit.event.entity.*;
+import org.bukkit.event.player.*;
 
 
 /**
@@ -49,6 +49,18 @@ public class InteractionListener implements Listener
 		player.teleport( destination, PlayerTeleportEvent.TeleportCause.PLUGIN );
 	}
 
+	private void interventIfNeeded( Cancellable event, Player player, WorldConfig worldConfig )
+	{
+		if( !worldConfig.isEventRestrictedForPlayer( event.getClass(), player ) )
+			return;
+		CatRestrictor.getInstance().getLogger().log( Level.INFO, "Cancelling event \"{0}\" from \"{1}\"",
+			new Object [] { event.getClass(), player.getName() } );
+		if( worldConfig.getInterventionMessage() != null )
+			player.sendMessage( worldConfig.getInterventionMessage() );
+		event.setCancelled( true );
+		this.teleportIfNeeded( player, worldConfig );
+	}
+
 	@EventHandler( priority = EventPriority.LOWEST )
 	public void onPlayerInteraction( PlayerInteractEvent event )
 	{
@@ -57,16 +69,7 @@ public class InteractionListener implements Listener
 
 		Player player = event.getPlayer();
 		WorldConfig worldConfig = CatRestrictor.getInstance().getWorldConfig( player.getWorld() );
-
-		if( worldConfig.isInteractionAllowed( player ) )
-			return;
-
-		CatRestrictor.getInstance().getLogger().log( Level.INFO, "Cancelling interaction from \"{0}\"", player.getName() );
-		if( worldConfig.getInterventionMessage() != null )
-			player.sendMessage( worldConfig.getInterventionMessage() );
-
-		event.setCancelled( true );
-		this.teleportIfNeeded( player, worldConfig );
+		this.interventIfNeeded( event, player, worldConfig );
 	}
 
 	@EventHandler( priority = EventPriority.LOWEST )
@@ -74,16 +77,7 @@ public class InteractionListener implements Listener
 	{
 		Player player = event.getPlayer();
 		WorldConfig worldConfig = CatRestrictor.getInstance().getWorldConfig( player.getWorld() );
-
-		if( worldConfig.isEntityInteractionAllowed( player ) )
-			return;
-
-		CatRestrictor.getInstance().getLogger().log( Level.INFO, "Cancelling entity interaction from \"{0}\"", player.getName() );
-		if( worldConfig.getInterventionMessage() != null )
-			player.sendMessage( worldConfig.getInterventionMessage() );
-
-		event.setCancelled( true );
-		this.teleportIfNeeded( player, worldConfig );
+		this.interventIfNeeded( event, player, worldConfig );
 	}
 
 	@EventHandler( priority = EventPriority.LOWEST )
@@ -93,17 +87,23 @@ public class InteractionListener implements Listener
 		if( !( damager instanceof Player) )
 			return;
 		Player player = (Player)damager;
-
 		WorldConfig worldConfig = CatRestrictor.getInstance().getWorldConfig( player.getWorld() );
+		this.interventIfNeeded( event, player, worldConfig );
+	}
 
-		if( worldConfig.isEntityInteractionAllowed( player ) )
-			return;
+	@EventHandler( priority = EventPriority.LOWEST )
+	public void onBlockPlaceEvent( BlockPlaceEvent event )
+	{
+		Player player = event.getPlayer();
+		WorldConfig worldConfig = CatRestrictor.getInstance().getWorldConfig( player.getWorld() );
+		this.interventIfNeeded( event, player, worldConfig );
+	}
 
-		CatRestrictor.getInstance().getLogger().log( Level.INFO, "Cancelling entity damage by \"{0}\"", player.getName() );
-		if( worldConfig.getInterventionMessage() != null )
-			player.sendMessage( worldConfig.getInterventionMessage() );
-
-		event.setCancelled( true );
-		this.teleportIfNeeded( player, worldConfig );
+	@EventHandler( priority = EventPriority.LOWEST )
+	public void onBlockBreakEvent( BlockBreakEvent event )
+	{
+		Player player = event.getPlayer();
+		WorldConfig worldConfig = CatRestrictor.getInstance().getWorldConfig( player.getWorld() );
+		this.interventIfNeeded( event, player, worldConfig );
 	}
 }

@@ -43,11 +43,11 @@ public class OperatorCommandExecutor implements CommandExecutor
 			return false;
 		}
 		String commandName = command.getName();
-		if( commandName.equals( "gc_add" ) )
+		if( commandName.equals( "cr_add" ) )
 			return add( sender, args );
-		if( commandName.equals( "gc_rm" ) )
+		if( commandName.equals( "cr_rm" ) )
 			return remove( sender, args );
-		if( commandName.equals( "gc_reload" ) )
+		if( commandName.equals( "cr_reload" ) )
 			return reload( sender, args );
 		return false;
 	}
