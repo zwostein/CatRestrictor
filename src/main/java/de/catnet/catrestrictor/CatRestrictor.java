@@ -48,9 +48,6 @@ public final class CatRestrictor extends JavaPlugin
 		return instance;
 	}
 
-	/**
-	 *
-	 */
 	@Override
 	public void onEnable()
 	{
@@ -85,16 +82,10 @@ public final class CatRestrictor extends JavaPlugin
 		this.getServer().getPluginManager().registerEvents( this.playerInteractionListener, this );
 
 		OperatorCommandExecutor commandExecutor = new OperatorCommandExecutor();
-		getCommand( "cr_add" ).setExecutor( commandExecutor );
-		getCommand( "cr_rm" ).setExecutor( commandExecutor );
-		getCommand( "cr_reload" ).setExecutor( commandExecutor );
 
 		this.getLogger().log( Level.INFO, "Enabled {0}", getDescription().getFullName() );
 	}
 
-	/**
-	 *
-	 */
 	@Override
 	public void onDisable()
 	{

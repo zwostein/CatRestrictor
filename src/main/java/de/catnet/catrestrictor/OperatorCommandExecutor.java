@@ -33,6 +33,18 @@ import org.bukkit.command.CommandSender;
  */
 public class OperatorCommandExecutor implements CommandExecutor
 {
+	static final String COMMAND_ADD = "cr_add";
+	static final String COMMAND_REMOVE = "cr_rm";
+	static final String COMMAND_RELOAD = "cr_reload";
+
+	@SuppressWarnings( "LeakingThisInConstructor" )
+	public OperatorCommandExecutor()
+	{
+		CatRestrictor.getInstance().getCommand( COMMAND_ADD ).setExecutor( this );
+		CatRestrictor.getInstance().getCommand( COMMAND_REMOVE ).setExecutor( this );
+		CatRestrictor.getInstance().getCommand( COMMAND_RELOAD ).setExecutor( this );
+	}
+
 	public boolean onCommand( CommandSender sender, Command command, String commandLabel, String[] args )
 	{
 		if( !sender.isOp() )
@@ -43,11 +55,11 @@ public class OperatorCommandExecutor implements CommandExecutor
 			return false;
 		}
 		String commandName = command.getName();
-		if( commandName.equals( "cr_add" ) )
+		if( commandName.equals( COMMAND_ADD ) )
 			return add( sender, args );
-		if( commandName.equals( "cr_rm" ) )
+		if( commandName.equals( COMMAND_REMOVE ) )
 			return remove( sender, args );
-		if( commandName.equals( "cr_reload" ) )
+		if( commandName.equals( COMMAND_RELOAD ) )
 			return reload( sender, args );
 		return false;
 	}
@@ -80,9 +92,9 @@ public class OperatorCommandExecutor implements CommandExecutor
 		if( wl == null )
 			return true;
 		if( wl.add( args[1] ) )
-			sender.sendMessage( "Added \"" + args[1] + "\" to witelist of \"" + args[0] + "\"" );
+			sender.sendMessage( "Added \"" + args[1] + "\" to whitelist of \"" + args[0] + "\"" );
 		else
-			sender.sendMessage( "\"" + args[1] + "\" already in witelist of \"" + args[0] + "\"" );
+			sender.sendMessage( "\"" + args[1] + "\" already in whitelist of \"" + args[0] + "\"" );
 		return true;
 	}
 
@@ -94,9 +106,9 @@ public class OperatorCommandExecutor implements CommandExecutor
 		if( wl == null )
 			return true;
 		if( wl.remove( args[1] ) )
-			sender.sendMessage( "Removed \"" + args[1] + "\" from witelist of \"" + args[0] + "\"" );
+			sender.sendMessage( "Removed \"" + args[1] + "\" from whitelist of \"" + args[0] + "\"" );
 		else
-			sender.sendMessage( "\"" + args[1] + "\" not in witelist of \"" + args[0] + "\"" );
+			sender.sendMessage( "\"" + args[1] + "\" not in whitelist of \"" + args[0] + "\"" );
 		return true;
 	}
 
