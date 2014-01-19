@@ -7,17 +7,13 @@ main: ${project.groupId}.${project.artifactId}.${project.name}
 load: POSTWORLD
 
 commands:
-  cr_add:
-    description: Adds a player to a whitelist
+  cr:
+    description: Manages CatRestrictor whitelists
     usage: |
-           /<command> <worldname> <playername>
-           Example: /<command> world Notch
-  cr_rm:
-    description: Removes a player from a whitelist
-    usage: |
-           /<command> <worldname> <playername>
-           Example: /<command> world Notch
-  cr_reload:
-    description: Reloads all whitelists.
-    usage: |
-           /<command>
+           Usage:
+               /<command> add|rm <worldname> <playername>
+               /<command> reload
+           Examples:
+               /<command> add world Notch
+               /<command> rm world Notch
+               /<command> reload

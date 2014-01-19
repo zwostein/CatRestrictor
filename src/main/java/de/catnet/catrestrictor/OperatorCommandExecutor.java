@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package de.catnet.catrestrictor;
 
 
+import java.util.Arrays;
 import java.util.logging.Level;
 
 import org.bukkit.World;
@@ -33,16 +34,15 @@ import org.bukkit.command.CommandSender;
  */
 public class OperatorCommandExecutor implements CommandExecutor
 {
-	static final String COMMAND_ADD = "cr_add";
-	static final String COMMAND_REMOVE = "cr_rm";
-	static final String COMMAND_RELOAD = "cr_reload";
+	static final String COMMAND = "cr";
+	static final String OP_ADD = "add";
+	static final String OP_REMOVE = "rm";
+	static final String OP_RELOAD = "reload";
 
 	@SuppressWarnings( "LeakingThisInConstructor" )
 	public OperatorCommandExecutor()
 	{
-		CatRestrictor.getInstance().getCommand( COMMAND_ADD ).setExecutor( this );
-		CatRestrictor.getInstance().getCommand( COMMAND_REMOVE ).setExecutor( this );
-		CatRestrictor.getInstance().getCommand( COMMAND_RELOAD ).setExecutor( this );
+		CatRestrictor.getInstance().getCommand( COMMAND ).setExecutor( this );
 	}
 
 	public boolean onCommand( CommandSender sender, Command command, String commandLabel, String[] args )
@@ -55,12 +55,19 @@ public class OperatorCommandExecutor implements CommandExecutor
 			return false;
 		}
 		String commandName = command.getName();
-		if( commandName.equals( COMMAND_ADD ) )
-			return add( sender, args );
-		if( commandName.equals( COMMAND_REMOVE ) )
-			return remove( sender, args );
-		if( commandName.equals( COMMAND_RELOAD ) )
-			return reload( sender, args );
+		if( !commandName.equals( COMMAND ) )
+			return false;
+		if( args.length == 0 )
+			return false;
+		String[] subCmdArgs = null;
+		if( args.length > 1 )
+			subCmdArgs = Arrays.copyOfRange( args, 1, args.length );
+		if( args[0].equals( OP_ADD ) )
+			return add( sender, subCmdArgs );
+		if( args[0].equals( OP_REMOVE ) )
+			return remove( sender, subCmdArgs );
+		if( args[0].equals( OP_RELOAD ) )
+			return reload( sender, subCmdArgs );
 		return false;
 	}
 
