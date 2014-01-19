@@ -59,23 +59,29 @@ public final class CatRestrictor extends JavaPlugin
 		instance = this;
 
 		this.saveDefaultConfig();
-		for( World world : this.getServer().getWorlds() )
+
+		ConfigurationSection worldsSection = this.getConfig().getConfigurationSection( "worlds" );
+		if( worldsSection == null )
 		{
-			WorldConfig worldConfig;
+			this.getLogger().log( Level.WARNING, "No Worlds are configured!" );
+		} else
+		{
+			for( String worldName : worldsSection.getKeys( false ) )
+			{
+				ConfigurationSection worldSection = worldsSection.getConfigurationSection( worldName );
+				if( worldSection == null )
+				{
+					this.getLogger().log( Level.WARNING, "Could not read configuration for \"{0}\"!", worldName );
+					continue;
+				}
 
-			ConfigurationSection worldSection = getConfig().getConfigurationSection( "worlds." + world.getName() );
-			if( worldSection == null )
-			{
-				this.getLogger().log( Level.WARNING, "World \"{0}\" not configured!", world.getName() );
-				worldConfig = new WorldConfig();
-			} else
-			{
-				worldConfig = WorldConfigSerializer.newWorldConfigFromConfigurationSection( worldSection );
+				WorldConfig worldConfig = WorldConfigSerializer.newWorldConfigFromConfigurationSection( worldSection );
+
+				this.worldConfigs.put( worldName, worldConfig );
+
+				this.getLogger().log( Level.INFO, "Loaded config for \"{0}\": {1}",
+					new Object[] { worldName, worldConfig.toString() } );
 			}
-
-			this.getLogger().log( Level.INFO, "Loaded config for \"{0}\": {1}",
-				new Object[] { world.getName(), worldConfig.toString() } );
-			this.worldConfigs.put( world.getName(), worldConfig );
 		}
 
 		this.playerInteractionListener = new InteractionListener();

@@ -22,6 +22,7 @@ package de.catnet.catrestrictor;
 import java.util.logging.Level;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -39,6 +40,14 @@ import org.bukkit.event.player.*;
  */
 public class InteractionListener implements Listener
 {
+	private WorldConfig getWorldConfig( World world )
+	{
+		WorldConfig wc = CatRestrictor.getInstance().getWorldConfig( world );
+		if( wc == null )
+			wc = new WorldConfig();
+		return wc;
+	}
+
 	private void teleportIfNeeded( Player player, WorldConfig worldConfig )
 	{
 		Location destination = worldConfig.getTeleportDestination();
@@ -68,7 +77,7 @@ public class InteractionListener implements Listener
 			return;
 
 		Player player = event.getPlayer();
-		WorldConfig worldConfig = CatRestrictor.getInstance().getWorldConfig( player.getWorld() );
+		WorldConfig worldConfig = this.getWorldConfig( player.getWorld() );
 		this.interventIfNeeded( event, player, worldConfig );
 	}
 
@@ -76,7 +85,7 @@ public class InteractionListener implements Listener
 	public void onPlayerInteraction( PlayerInteractEntityEvent event )
 	{
 		Player player = event.getPlayer();
-		WorldConfig worldConfig = CatRestrictor.getInstance().getWorldConfig( player.getWorld() );
+		WorldConfig worldConfig = this.getWorldConfig( player.getWorld() );
 		this.interventIfNeeded( event, player, worldConfig );
 	}
 
@@ -87,7 +96,7 @@ public class InteractionListener implements Listener
 		if( !( damager instanceof Player) )
 			return;
 		Player player = (Player)damager;
-		WorldConfig worldConfig = CatRestrictor.getInstance().getWorldConfig( player.getWorld() );
+		WorldConfig worldConfig = this.getWorldConfig( player.getWorld() );
 		this.interventIfNeeded( event, player, worldConfig );
 	}
 
@@ -95,7 +104,7 @@ public class InteractionListener implements Listener
 	public void onBlockPlaceEvent( BlockPlaceEvent event )
 	{
 		Player player = event.getPlayer();
-		WorldConfig worldConfig = CatRestrictor.getInstance().getWorldConfig( player.getWorld() );
+		WorldConfig worldConfig = this.getWorldConfig( player.getWorld() );
 		this.interventIfNeeded( event, player, worldConfig );
 	}
 
@@ -103,7 +112,7 @@ public class InteractionListener implements Listener
 	public void onBlockBreakEvent( BlockBreakEvent event )
 	{
 		Player player = event.getPlayer();
-		WorldConfig worldConfig = CatRestrictor.getInstance().getWorldConfig( player.getWorld() );
+		WorldConfig worldConfig = this.getWorldConfig( player.getWorld() );
 		this.interventIfNeeded( event, player, worldConfig );
 	}
 }

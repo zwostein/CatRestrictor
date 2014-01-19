@@ -12,7 +12,6 @@ worlds:
             y: 0.0
             z: 0.0
     world_nether:
-        whitelist: world.whitelist.txt
         restrictedEvents:
             - org.bukkit.event.player.PlayerInteractEvent
             - org.bukkit.event.player.PlayerInteractEntityEvent
@@ -24,6 +23,7 @@ worlds:
             y: 0.0
             z: 0.0
     world_the_end:
+        whitelist: world.whitelist.txt
         restrictedEvents:
             - org.bukkit.event.player.PlayerInteractEvent
             - org.bukkit.event.player.PlayerInteractEntityEvent

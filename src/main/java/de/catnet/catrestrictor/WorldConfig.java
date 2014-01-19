@@ -113,28 +113,29 @@ public class WorldConfig
 	@Override
 	public String toString()
 	{
-		String ret = "WorldConfig{";
+		String ret = "WorldConfig\n{";
 
-		ret += "restrictedEvents=\"";
+		ret += "\n\trestrictedEvents=\"";
 		for( Class c: this.restrictedEvents )
 		{
 			ret += c.getSimpleName() + ",";
 		}
-		ret = ret.substring( 0, ret.length()-1 );
+		if( ret.length() > 0 )
+			ret = ret.substring( 0, ret.length()-1 );
 		ret += "\"";
 
 		if( this.whitelist != null )
-			ret += ",whitelist=\"" + this.whitelist.getFile().getPath() + "\",";
+			ret += ",\n\twhitelist=\"" + this.whitelist.getFile().getPath() + "\"";
 
-		ret += ",teleportEnabled=" + this.teleportEnabled;
+		ret += ",\n\tteleportEnabled=" + this.teleportEnabled;
 		if( this.teleportDestination != null )
-			ret += ",teleportDestination=" + this.teleportDestination.toString();
+			ret += ",\n\tteleportDestination=" + this.teleportDestination.toString();
 
 
 		if( this.interventionMessage != null )
-			ret += ",interventionMessage=\"" + this.interventionMessage + "\"";
+			ret += ",\n\tinterventionMessage=\"" + this.interventionMessage + "\"";
 
-		ret += "}";
+		ret += "\n}";
 		return ret;
 	}
 }
