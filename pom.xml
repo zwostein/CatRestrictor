@@ -3,7 +3,7 @@
 	<groupId>de.catnet</groupId>
 	<artifactId>catrestrictor</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>CatRestrictor</name>
 	<description>Saves your world from evil guests and optionally teleports them to another world.</description>
 	<url>http://catnet.de</url>

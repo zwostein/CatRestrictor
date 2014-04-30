@@ -21,11 +21,12 @@ package de.catnet.catrestrictor;
 
 import java.util.Arrays;
 import java.util.logging.Level;
-
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 
 /**
@@ -98,8 +99,9 @@ public class OperatorCommandExecutor implements CommandExecutor
 		Whitelist wl = retrieveWhitelist( sender, args[0] );
 		if( wl == null )
 			return true;
-		if( wl.add( args[1] ) )
-			sender.sendMessage( "Added \"" + args[1] + "\" to whitelist of \"" + args[0] + "\"" );
+		OfflinePlayer p = CatRestrictor.getInstance().getServer().getOfflinePlayer( args[1] );
+		if( wl.add( p.getUniqueId() ) )
+			sender.sendMessage( "Added \"" + args[1] + "\" (" + p.getUniqueId() + ") to whitelist of \"" + args[0] + "\"" );
 		else
 			sender.sendMessage( "\"" + args[1] + "\" already in whitelist of \"" + args[0] + "\"" );
 		return true;
@@ -112,8 +114,9 @@ public class OperatorCommandExecutor implements CommandExecutor
 		Whitelist wl = retrieveWhitelist( sender, args[0] );
 		if( wl == null )
 			return true;
-		if( wl.remove( args[1] ) )
-			sender.sendMessage( "Removed \"" + args[1] + "\" from whitelist of \"" + args[0] + "\"" );
+		OfflinePlayer p = CatRestrictor.getInstance().getServer().getOfflinePlayer( args[1] );
+		if( wl.remove( p.getUniqueId() ) )
+			sender.sendMessage( "Removed \"" + args[1] + "\" (" + p.getUniqueId() + ") from whitelist of \"" + args[0] + "\"" );
 		else
 			sender.sendMessage( "\"" + args[1] + "\" not in whitelist of \"" + args[0] + "\"" );
 		return true;

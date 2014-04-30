@@ -27,8 +27,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
-
 import org.bukkit.entity.Player;
 
 
@@ -39,7 +39,7 @@ import org.bukkit.entity.Player;
 public class Whitelist
 {
 	private final File file;
-	private final List<String> logins = new ArrayList<String>();
+	private final List<UUID> uuids = new ArrayList<UUID>();
 
 	/**
 	 * Returns a file object that stores all listed names.
@@ -80,36 +80,36 @@ public class Whitelist
 
 	/**
 	 * Checks if given login name is listed in this whitelist.
-	 * @param playername A player's login name.
+	 * @param uuid A player's unique id.
 	 * @return True if given login name is listed in this whitelist.
 	 */
-	public boolean isListed( String playername )
+	public boolean isListed( UUID uuid )
 	{
-		return this.logins.contains( playername );
+		return this.uuids.contains( uuid );
 	}
 
 	/**
-	 * Convenience method for {@link #isListed( String playername ) isListed}
-	 * @param player See {@link #isListed( String playername ) isListed}
-	 * @return See {@link #isListed( String playername ) isListed}
+	 * Convenience method for {@link #isListed( UUID uuid ) isListed}
+	 * @param player See {@link #isListed( UUID uuid ) isListed}
+	 * @return See {@link #isListed( UUID uuid ) isListed}
 	 */
 	public boolean isListed( Player player )
 	{
-		return this.isListed( player.getName() );
+		return this.isListed( player.getUniqueId() );
 	}
 
 	/**
-	 * Adds a login name to this whitelist and also updates the corresponding file.
-	 * @param playername A login name to add to this whitelist.
-	 * @return True if given login name has been added to the whitelist. False if login name is already listed or an error occured while updating the whitelist's file.
+	 * Adds a unique id to this whitelist and also updates the corresponding file.
+	 * @param uuid A unique id to add to this whitelist.
+	 * @return True if given unique id has been added to the whitelist. False if unique id is already listed or an error occured while updating the whitelist's file.
 	 */
-	public boolean add( String playername )
+	public boolean add( UUID uuid )
 	{
-		if( this.logins.contains( playername ) )
+		if( this.uuids.contains( uuid ) )
 		{
 			return false;
 		}
-		if( !this.logins.add( playername ) )
+		if( !this.uuids.add( uuid ) )
 		{
 			return false;
 		}
@@ -117,27 +117,27 @@ public class Whitelist
 	}
 
 	/**
-	 * Convenience method for {@link #add( String playername ) add}
-	 * @param player See {@link #add( String playername ) add}
-	 * @return See {@link #add( String playername ) add}
+	 * Convenience method for {@link #add( UUID uuid ) add}
+	 * @param player See {@link #add( UUID uuid ) add}
+	 * @return See {@link #add( UUID uuid ) add}
 	 */
 	public boolean add( Player player )
 	{
-		return this.add( player.getName() );
+		return this.add( player.getUniqueId() );
 	}
 
 	/**
-	 * Removes a login name from this whitelist and also updates the corresponding file.
-	 * @param playername A player.
-	 * @return True if given player's login name has been removed from the whitelist. False if login name was not listed or an error occured while updating the whitelist's file.
+	 * Removes a unique id from this whitelist and also updates the corresponding file.
+	 * @param uuid A player's unique id.
+	 * @return True if given player's unique id has been removed from the whitelist. False if the unique id was not listed or an error occured while updating the whitelist's file.
 	 */
-	public boolean remove( String playername )
+	public boolean remove( UUID uuid )
 	{
-		if( !this.logins.contains( playername ) )
+		if( !this.uuids.contains( uuid ) )
 		{
 			return false;
 		}
-		if( !this.logins.remove( playername ) )
+		if( !this.uuids.remove( uuid ) )
 		{
 			return false;
 		}
@@ -145,13 +145,13 @@ public class Whitelist
 	}
 
 	/**
-	 * Convenience method for {@link #remove( String playername ) remove}
-	 * @param player See {@link #remove( String playername ) remove}
-	 * @return See {@link #remove( String playername ) remove}
+	 * Convenience method for {@link #remove( UUID uuid ) remove}
+	 * @param player See {@link #remove( UUID uuid ) remove}
+	 * @return See {@link #remove( UUID uuid ) remove}
 	 */
 	public boolean remove( Player player )
 	{
-		return remove( player.getName() );
+		return remove( player.getUniqueId() );
 	}
 
 	private boolean write()
@@ -159,9 +159,9 @@ public class Whitelist
 		try
 		{
 			BufferedWriter writer = new BufferedWriter( new FileWriter( this.file ) );
-			for( String login : this.logins )
+			for( UUID uuid : this.uuids )
 			{
-				writer.write( login );
+				writer.write( uuid.toString() );
 				writer.newLine();
 			}
 			writer.close();
@@ -179,7 +179,7 @@ public class Whitelist
 	 */
 	public final boolean reload()
 	{
-		this.logins.clear();
+		this.uuids.clear();
 		try
 		{
 			BufferedReader reader = new BufferedReader( new FileReader( this.file ) );
@@ -189,7 +189,7 @@ public class Whitelist
 				line = line.trim();
 				if( !line.isEmpty() )
 				{
-					this.logins.add( line );
+					this.uuids.add( UUID.fromString( line ) );
 				}
 			}
 			reader.close();
