@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -36,8 +35,50 @@ public final class CatRestrictor extends JavaPlugin
 {
 	private static CatRestrictor instance = null;
 
-	private final Map<String, WorldConfig> worldConfigs = new HashMap<String, WorldConfig>();
+	private static final Map<String, WorldConfig> worldConfigs = new HashMap<String, WorldConfig>();
+
+	/**
+	 * Returns a world's configuration.
+	 * @param world The world's name.
+	 * @return A valid world configuration or null if not existing.
+	 */
+	public static WorldConfig getWorldConfig( String world )
+	{
+		return worldConfigs.get( world );
+	}
+
+	/**
+	 * Returns a world's configuration.
+	 * @param world A world object.
+	 * @return A valid world configuration or null if not existing.
+	 */
+	public static WorldConfig getWorldConfig( World world )
+	{
+		return getWorldConfig( world.getName() );
+	}
+
+	/**
+	 * Returns all available world configurations
+	 * @return A map using the world's name as key and its configuration as value.
+	 */
+	public static Map<String, WorldConfig> getWorldConfigs()
+	{
+		return worldConfigs;
+	}
+
+	/**
+	 * Add a world's configuration to the database.
+	 * @param name The world's name.
+	 * @param config A world configuration.
+	 */
+	public static void setWorldConfig( String name, WorldConfig config )
+	{
+		worldConfigs.put( name, config );
+	}
+
+
 	private InteractionListener playerInteractionListener = null;
+	private WorldListener worldListener = null;
 
 	/**
 	 * Returns the plugin's instance.
@@ -59,7 +100,7 @@ public final class CatRestrictor extends JavaPlugin
 		instance = this;
 
 		this.saveDefaultConfig();
-
+/*
 		ConfigurationSection worldsSection = this.getConfig().getConfigurationSection( "worlds" );
 		if( worldsSection == null )
 		{
@@ -83,6 +124,9 @@ public final class CatRestrictor extends JavaPlugin
 					new Object[] { worldName, worldConfig.toString() } );
 			}
 		}
+*/
+		this.worldListener = new WorldListener();
+		this.getServer().getPluginManager().registerEvents( this.worldListener, this );
 
 		this.playerInteractionListener = new InteractionListener();
 		this.getServer().getPluginManager().registerEvents( this.playerInteractionListener, this );
@@ -102,34 +146,5 @@ public final class CatRestrictor extends JavaPlugin
 		}
 		instance = null;
 		this.getLogger().log( Level.INFO, "Disabled {0}", getDescription().getFullName() );
-	}
-
-	/**
-	 * Returns a world's configuration.
-	 * @param world The world's name.
-	 * @return A valid world configuration or null if not existing.
-	 */
-	public WorldConfig getWorldConfig( String world )
-	{
-		return this.worldConfigs.get( world );
-	}
-
-	/**
-	 * Returns a world's configuration.
-	 * @param world A world object.
-	 * @return A valid world configuration or null if not existing.
-	 */
-	public WorldConfig getWorldConfig( World world )
-	{
-		return this.getWorldConfig( world.getName() );
-	}
-
-	/**
-	 * Returns all available world configurations
-	 * @return A map using the world's name as key and its configuration as value.
-	 */
-	public Map<String, WorldConfig> getWorldConfigs()
-	{
-		return this.worldConfigs;
 	}
 }

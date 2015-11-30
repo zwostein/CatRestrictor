@@ -32,6 +32,8 @@ import org.bukkit.entity.Player;
  */
 public class WorldConfig
 {
+
+
 	private Whitelist whitelist = null;
 	private boolean teleportEnabled = false;
 	private Location teleportDestination = null;
