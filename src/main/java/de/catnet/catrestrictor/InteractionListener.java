@@ -32,6 +32,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
+import org.bukkit.event.vehicle.*;
+import org.bukkit.event.hanging.*;
 
 
 /**
@@ -110,6 +112,36 @@ public class InteractionListener implements Listener
 
 	@EventHandler( priority = EventPriority.LOWEST )
 	public void onBlockBreakEvent( BlockBreakEvent event )
+	{
+		Player player = event.getPlayer();
+		WorldConfig worldConfig = this.getWorldConfig( player.getWorld() );
+		this.interventIfNeeded( event, player, worldConfig );
+	}
+
+	@EventHandler( priority = EventPriority.LOWEST )
+	public void onVehicleDamageEvent( VehicleDamageEvent event )
+	{
+		Entity atacker = event.getAttacker();
+		if( !( atacker instanceof Player) )
+			return;
+		Player player = (Player)atacker;
+		WorldConfig worldConfig = this.getWorldConfig( player.getWorld() );
+		this.interventIfNeeded( event, player, worldConfig );
+	}
+
+	@EventHandler( priority = EventPriority.LOWEST )
+	public void onHangingBreakByEntityEvent( HangingBreakByEntityEvent event )
+	{
+		Entity remover = event.getRemover();
+		if( !( remover instanceof Player) )
+			return;
+		Player player = (Player)remover;
+		WorldConfig worldConfig = this.getWorldConfig( player.getWorld() );
+		this.interventIfNeeded( event, player, worldConfig );
+	}
+
+	@EventHandler( priority = EventPriority.LOWEST )
+	public void onPlayerArmorStandManipulateEvent( PlayerArmorStandManipulateEvent event )
 	{
 		Player player = event.getPlayer();
 		WorldConfig worldConfig = this.getWorldConfig( player.getWorld() );

@@ -3,7 +3,7 @@
 	<groupId>de.catnet</groupId>
 	<artifactId>catrestrictor</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.6-SNAPSHOT</version>
 	<name>CatRestrictor</name>
 	<description>Saves your world from evil guests and optionally teleports them to another world.</description>
 	<url>http://catnet.de</url>
@@ -28,14 +28,14 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.8.8-R0.1-SNAPSHOT</version>
+			<version>1.9-R0.1-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.8.8-R0.1-SNAPSHOT</version>
+			<version>1.9-R0.1-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>

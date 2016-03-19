@@ -21,9 +21,11 @@ package de.catnet.catrestrictor;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.World;
 
 
 /**
@@ -36,7 +38,13 @@ public class WorldConfig
 
 	private Whitelist whitelist = null;
 	private boolean teleportEnabled = false;
-	private Location teleportDestination = null;
+	private Location cachedTeleportDestination = null;
+	private String teleportDestination_worldName;
+	private double teleportDestination_x;
+	private double teleportDestination_y;
+	private double teleportDestination_z;
+	private float teleportDestination_pitch;
+	private float teleportDestination_yaw;
 	private String interventionMessage = null;
 	private final Set<Class> restrictedEvents = new HashSet<Class>();
 
@@ -89,7 +97,22 @@ public class WorldConfig
 
 	public Location getTeleportDestination()
 	{
-		return this.teleportDestination;
+		if( this.cachedTeleportDestination != null )
+			return this.cachedTeleportDestination;
+
+		World world = CatRestrictor.getInstance().getServer().getWorld( this.teleportDestination_worldName );
+		if( world == null )
+			CatRestrictor.getInstance().getLogger().log( Level.WARNING, "The world \"{0}\" could not be found, using default instead", this.teleportDestination_worldName );
+
+		this.cachedTeleportDestination = new Location(
+			world,
+			this.teleportDestination_x,
+			this.teleportDestination_y,
+			this.teleportDestination_z,
+			this.teleportDestination_pitch,
+			this.teleportDestination_yaw
+		);
+		return this.cachedTeleportDestination;
 	}
 
 	public void setTeleportEnabled( boolean enable )
@@ -97,9 +120,14 @@ public class WorldConfig
 		this.teleportEnabled = enable;
 	}
 
-	public void setTeleportDestination( Location destination )
+	public void setTeleportDestination( String worldName, double x, double y, double z, float pitch, float yaw )
 	{
-		this.teleportDestination = destination;
+		this.teleportDestination_worldName = worldName;
+		this.teleportDestination_x = x;
+		this.teleportDestination_y = y;
+		this.teleportDestination_z = z;
+		this.teleportDestination_pitch = pitch;
+		this.teleportDestination_yaw = yaw;
 	}
 
 	public String getInterventionMessage()
@@ -130,9 +158,6 @@ public class WorldConfig
 			ret += ",\n\twhitelist=\"" + this.whitelist.getFile().getPath() + "\"";
 
 		ret += ",\n\tteleportEnabled=" + this.teleportEnabled;
-		if( this.teleportDestination != null )
-			ret += ",\n\tteleportDestination=" + this.teleportDestination.toString();
-
 
 		if( this.interventionMessage != null )
 			ret += ",\n\tinterventionMessage=\"" + this.interventionMessage + "\"";

@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -53,11 +52,14 @@ public class WorldConfigSerializer
 		}
 
 		worldConfig.setTeleportEnabled( worldSection.getBoolean( "enableTeleport", false ) );
-		Location loc = new Location( CatRestrictor.getInstance().getServer().getWorld( worldSection.getName() ), 0.0, 0.0, 0.0 );
 		ConfigurationSection locationSection = worldSection.getConfigurationSection( "teleportDestination" );
-		if( locationSection != null )
-			loc = LocationSerializer.newLocationFromConfigurationSection( locationSection, loc );
-		worldConfig.setTeleportDestination( loc );
+		String worldName = locationSection.getString( "world" );
+		double x = locationSection.getDouble( "x", 0.0 );
+		double y = locationSection.getDouble( "y", 0.0 );
+		double z = locationSection.getDouble( "z", 0.0 );
+		float pitch = (float)locationSection.getDouble( "pitch", 0.0 );
+		float yaw = (float)locationSection.getDouble( "yaw", 0.0 );
+		worldConfig.setTeleportDestination( worldName, x, y, z, pitch, yaw );
 		return worldConfig;
 	}
 }
